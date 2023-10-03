@@ -1,6 +1,6 @@
 {
   "name": "react-cropify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "react-cropify helps with cropping image in react js ",
   "main": "index.js",
   "scripts": {
