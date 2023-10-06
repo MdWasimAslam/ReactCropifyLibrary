@@ -1,53 +1,159 @@
 ## React-Cropify
 
 
-React-Cropify is an npm package that simplifies the process of cropping images in your web applications. With just a few lines of code, you can integrate powerful image cropping functionality into your project.
-## Table of Contents
+React-Cropify is an npm package that simplifies the process of cropping images in your web applications. With just a some lines of code, you can integrate powerful image cropping functionality into your project.
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ## Introduction
 
 React-Cropify is your ultimate solution for effortlessly incorporating image cropping capabilities into your web applications. Gone are the days of complex and time-consuming image cropping processes. With React-Cropify, you can achieve powerful image editing functionality in your projects with minimal effort and a clean, user-friendly interface.
 
-## Features
-
-- **Intuitive API**: Simplifies image cropping with an easy-to-use API.
-
-- **Customizable Crop Area**: Tailor width, height, and aspect ratio to match your needs.
-
-- **Real-Time Previews**: Visualize crop effects in real time for precise adjustments.
-
-- **Format Support**: Works seamlessly with various image formats (JPEG, PNG, GIF, etc.).
-
-- **Responsive Design**: Seamlessly adapts to different screen sizes and devices.
-
-- **Zoom and Pan**: Enables precise cropping, ideal for high-resolution images.
-
-- **Grid Overlay**: Assists users in aligning the crop area perfectly.
-
-- **Aspect Ratio Lock**: Maintains specific proportions during cropping.
-
-- **Cross-Browser Compatibility**: Works smoothly across different web browsers.
+![Animated GIF](https://i.ibb.co/Px6KgGg/recording-2023-10-07-01-11-08.gif)
 
 
-## Getting Started
 
-Provide instructions on how to get started with your project.
 
-### Prerequisites
+## Sample Usage
 
-List any software, libraries, or dependencies that users need to install before using your project.
 
-### Installation
+```JavaScript
+import React, { useState, useRef } from 'react';
+import cropContainer from 'react-cropify';
 
-Step-by-step instructions on how to install your project.
+function App() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [imageZoom, setImageZoom] = useState(0);
+  const [croppedWidth, setCroppedWidth] = useState(100); // Set your desired initial value
+  const [croppedHeight, setCroppedHeight] = useState(100); // Set your desired initial value
+
+  const imageRef = useRef(null);
+  const canvasRef = useRef(null);
+  const sliderRef = useRef(null);
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+      // Reset zoom when a new image is selected
+      setImageZoom(0.3);
+      if (sliderRef.current) {
+        sliderRef.current.value = 0.1; // Reset the slider value
+      }
+    }
+  };
+
+  const handleZoomSliderChange = () => {
+    const zoomValue = parseFloat(sliderRef.current.value); // Parse the slider value as a float
+    setImageZoom(zoomValue);
+  };
+
+  
+  const handleCrop = async () => {
+    if (selectedImage) {
+      try {
+        const croppedImageUrl = await cropContainer(selectedImage, imageZoom, croppedWidth, croppedHeight);
+        setCroppedImage(croppedImageUrl);
+      } catch (error) {
+        console.error('Error cropping image:', error);
+      }
+    }
+  };
+  
+
+  return (
+    <div
+      style={{
+        fontFamily: 'Arial',
+        textAlign: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <h1>Image Cropper</h1>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelect}
+        style={{ margin: '20px' }}
+      />
+      {selectedImage && (
+        <div>
+          <h2>Selected Image:</h2>
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: 0,
+              paddingBottom: '100%', // Creates a square container - Change for different shapes
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              ref={imageRef}
+              src={selectedImage}
+              alt="Selected"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: `translate(-50%, -50%) scale(${imageZoom})`,
+                maxWidth: 'none',
+                maxHeight: 'none',
+              }}
+            />
+          </div>
+          <div>
+            <input
+              type="range"
+              min={0.3}
+              max={3}
+              step={0.01}
+              ref={sliderRef}
+              value={imageZoom}
+              onChange={handleZoomSliderChange}
+              style={{
+                width: '100%',
+                position: 'relative',
+                zIndex: 2,
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {selectedImage && (
+        <div>
+          <button
+            onClick={handleCrop}
+            style={{
+              margin: '20px',
+              padding: '10px 20px',
+              background: '#0074D9',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            Crop Image
+          </button>
+        </div>
+      )}
+
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+      {croppedImage && (
+        <div>
+          <h2>Cropped Image:</h2>
+          <img src={croppedImage} alt="Cropped" width="200" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
 

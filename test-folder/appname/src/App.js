@@ -30,50 +30,6 @@ function App() {
     setImageZoom(zoomValue);
   };
 
-  // const handleCrop = () => {
-  //   console.log(imageZoom);
-  //   console.log(sliderRef);
-  //   if (imageRef.current && canvasRef.current) {
-  //     const canvas = canvasRef.current;
-  //     const squareSize = Math.min(imageRef.current.width, imageRef.current.height);
-  //     const width = squareSize;
-  //     const height = squareSize;
-  
-  //     // Calculate the cropped dimensions based on the zoom level
-  //     const croppedWidth = (squareSize / imageZoom)/4.3;
-  //     const croppedHeight = (squareSize / imageZoom)/4.3;
-  
-  //     canvas.width = width;
-  //     canvas.height = height;
-  
-  //     const cropCtx = canvas.getContext('2d', {
-  //       imageSmoothingEnabled: false,
-  //     });
-  
-  //     // Clear the canvas
-  //     cropCtx.clearRect(0, 0, width, height);
-  
-  //     // Calculate the position to center the cropped area, taking zoom into account
-  //     const xOffset = (imageRef.current.width - croppedWidth) / 2;
-  //     const yOffset = (imageRef.current.height - croppedHeight) / 2;
-  
-  //     // Draw the cropped part with the image
-  //     cropCtx.drawImage(
-  //       imageRef.current,
-  //       xOffset,
-  //       yOffset,
-  //       croppedWidth,
-  //       croppedHeight,
-  //       0,
-  //       0,
-  //       width,
-  //       height
-  //     );
-  
-  //     const croppedImageUrl = canvas.toDataURL('image/jpeg');
-  //     setCroppedImage(croppedImageUrl);
-  //   }
-  // };
   
   const handleCrop = async () => {
     if (selectedImage) {
@@ -114,7 +70,7 @@ function App() {
               position: 'relative',
               width: '100%',
               height: 0,
-              paddingBottom: '100%', // Creates a square container
+              paddingBottom: '100%', // Creates a square container - Change for different shapes
               overflow: 'hidden',
             }}
           >
